@@ -1,5 +1,6 @@
 import os, errno
 from urllib.request import urlretrieve
+from urllib.parse import quote
 
 #retrieve and read an update manifest
 
@@ -11,7 +12,7 @@ for line in myf:
     if temp[0] == 'R': #hopefully this is the correct letter
             print('Deleting', temp[1].strip())
             try:
-                os.remove(temp[1])
+                os.remove(temp[1].strip())
             except:
                 print('Unable to remove', temp[1].strip())
             try:
