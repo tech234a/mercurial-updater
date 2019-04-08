@@ -31,7 +31,7 @@ for line in myf:
             #open(temp[1].strip(), 'a') #create the file if needed, automatically closed
             print('Downloading new/updated file:', temp[1].strip())
             try:
-                urlretrieve(BASE_URL+temp[1], temp[1].strip())
+                urlretrieve((BASE_URL+temp[1]).replace(' ', '%20'), temp[1].strip())
             except:
                 print('Unable to retrieve', temp[1].strip()+', continuing.')
 myf.close()
