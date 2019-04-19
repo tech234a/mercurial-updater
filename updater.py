@@ -2,7 +2,7 @@ import os, errno, json
 from urllib.request import urlretrieve
 from urllib.parse import quote
 import requests
-from progress_meter import withprogress, MeterWindow #https://bitbucket.org/takluyver/progress_meter/
+#from progress_meter import withprogress, MeterWindow #https://bitbucket.org/takluyver/progress_meter/
 
 def fakeprint(*argv): #https://www.geeksforgeeks.org/args-kwargs-python/
     pass
@@ -71,7 +71,7 @@ errors = []
 for fileaction in actions:
     #print("in loop")
     error = False
-    statusinfo = "[" + str(format(round((completed_count/TOTAL_COUNT)*100, 2), ".2f")) + "%] [" + str(completed_count) + "/" + str(TOTAL_COUNT) + "]: " #https://stackoverflow.com/a/20457115/
+    statusinfo = "[" + str(format(round(((completed_count+1)/TOTAL_COUNT)*100, 2), ".2f")) + "%] [" + str(completed_count) + "/" + str(TOTAL_COUNT) + "]: " #https://stackoverflow.com/a/20457115/
     if actions[fileaction] == 'R': #hopefully this is the correct letter
             print(statusinfo + 'Deleting', fileaction.strip())
             try:
@@ -79,18 +79,20 @@ for fileaction in actions:
             except:
                 print('ERROR: Unable to remove', fileaction.strip())
                 error = True
-            try:
-                if not os.listdir(os.path.dirname(fileaction.strip())): #https://thispointer.com/python-how-to-check-if-a-directory-is-empty/
-                    os.rmdir(os.path.dirname(fileaction.strip()))
-            except:
-                pass
+            if os.path.dirname(fileaction.strip()):
+                try:
+                    if not os.listdir(os.path.dirname(fileaction.strip())): #https://thispointer.com/python-how-to-check-if-a-directory-is-empty/
+                        os.rmdir(os.path.dirname(fileaction.strip()))
+                except:
+                    pass
     elif actions[fileaction] == 'M' or actions[fileaction] == 'A':
             #print('Path:', (os.path.dirname(fileaction.strip())))
-            try:
-                os.makedirs(os.path.dirname(fileaction.strip()))
-            except OSError as exc: # Guard against race condition
-                if exc.errno != errno.EEXIST:
-                    raise
+            if os.path.dirname(fileaction.strip()):
+                try:
+                    os.makedirs(os.path.dirname(fileaction.strip()))
+                except OSError as exc: # Guard against race condition
+                    if exc.errno != errno.EEXIST:
+                        raise
             #end SO code
             #open(fileaction.strip(), 'a') #create the file if needed, automatically closed
             print(statusinfo + 'Downloading new/updated file:', fileaction.strip())
@@ -124,5 +126,5 @@ if error_count: print("Of these files,", error_count, "files contain errors and 
 
 
 config['INSTALLED_VERSION'] = TARGET_VERSION
-json.dump(config, open('updaterconfig.json', 'wb'))
+json.dump(config, open('updaterconfig.json', 'w'))
 #myf.close()
