@@ -1,1 +1,5 @@
 Flashpoint/*
+build/*
+dist/*
+__pycache__/*
+updater.spec
