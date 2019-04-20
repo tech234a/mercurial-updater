@@ -17,8 +17,11 @@ root = Tk()
 root.resizable(False, False) #https://stackoverflow.com/a/37447917/
 # create progress bar
 progress = ttk.Progressbar(root, orient = HORIZONTAL, length = 600)
+progress.config(mode = 'determinate', maximum=100, value = 0)
 # pack progress bar into root
+root.title("Retrieving updates, this will take a few minutes...")
 progress.pack()
+root.update()
 
 
 
